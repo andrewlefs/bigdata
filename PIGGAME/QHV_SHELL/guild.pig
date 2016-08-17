@@ -1,0 +1,20 @@
+register '/usr/hdp/2.3.4.0-3485/pig/lib/mysql-connector-java-5.1.34.jar';
+register '/usr/hdp/2.3.4.0-3485/pig/lib/piggybank.jar';
+register '/home/java/filejar/pigjavamain.jar';
+register '/home/java/filejar/elephant-bird-pig-4.1.jar';
+register '/home/java/filejar/elephant-bird-core-4.1.jar';
+register '/home/java/filejar/elephant-bird-hadoop-compat-4.1.jar';
+register '/home/java/filejar/protobuf-java-2.4.1.jar';
+--USING com.twitter.elephantbird.pig.load.LzoTokenizedLoader('|');
+%declare ALIAS 'qhv';
+%declare SEQFILE_LOADER 'com.twitter.elephantbird.pig.load.SequenceFileLoader';
+%declare SEQFILE_STORAGE 'com.twitter.elephantbird.pig.store.SequenceFileStorage';
+%declare INT_CONVERTER 'com.twitter.elephantbird.pig.util.IntWritableConverter';
+%declare TEXT_CONVERTER 'com.twitter.elephantbird.pig.util.TextConverter';
+%declare LONG_CONVERTER 'com.twitter.elephantbird.pig.util.LongWritableConverter';
+%declare VECTOR_CONVERTER 'com.twitter.elephantbird.pig.mahout.VectorWritableConverter';
+
+STOCK_A = LOAD '$ALIAS.gang$serverid' using org.apache.hive.hcatalog.pig.HCatLoader();
+STOCK_A1 = LIMIT STOCK_A 5;
+STOCK_A2 = FOREACH STOCK_A1 GENERATE id,myudfs.TestHex(protodata) as name;
+STORE STOCK_A2 INTO 'output/QHV/testgang';

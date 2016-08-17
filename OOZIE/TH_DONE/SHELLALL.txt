@@ -1,0 +1,19 @@
+#!/bin/bash
+GID=130
+TH=$(curl 'http://gapi.mobo.vn/?control=game&func=get_server_list&service_name=130&source=bigdata&is_sandbox=1')
+
+for SID in $TH
+do
+	echo "GameID:"$GID - "ServerID:"$SID
+	echo "=======================STARTPIG============================="
+	
+	pig -param serverid=$SID  -param gameid=$GID -useHCatalog -f  'hdfs://hadoop.core:8020/user/yarn/GAME/TH_SHELL/guild.pig' 
+	pig -param serverid=$SID  -param gameid=$GID -useHCatalog -f  'hdfs://hadoop.core:8020/user/yarn/GAME/TH_SHELL/guildmember.pig'  
+	
+	pig -param serverid=$SID  -param gameid=$GID -useHCatalog -f  'hdfs://hadoop.core:8020/user/yarn/GAME/TH_SHELL/role.pig'
+	pig -param serverid=$SID  -param gameid=$GID -useHCatalog -f  'hdfs://hadoop.core:8020/user/yarn/GAME/TH_SHELL/account.pig'
+	
+	echo "======================ENDPIG==============================="
+
+	
+done

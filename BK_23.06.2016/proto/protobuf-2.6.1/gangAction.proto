@@ -1,0 +1,255 @@
+option java_package = "myudfs";
+import "common.proto";
+
+// 帮派事件类型
+enum GangEventType {
+	GANG_EVNET_JOIN = 1; //入帮
+	GANG_EVENT_EXIT = 2; // 退帮
+	GANG_EVENT_DISMISS = 3; // 开除
+	GANG_EVENT_PROMOTE = 4; // 晋升
+	GANG_EVENT_DEMOTE = 5; // 降级
+	GANG_EVENT_TRANSFER = 6;// 移交
+	GANG_EVENT_DONATE_SILVER = 7; // 捐献_银两
+	GANG_EVENT_DONATE_GOLD = 8;// 捐献_元宝
+	GANG_EVENT_WORSHIP = 9; // 供奉
+}
+
+// 帮派建设类型
+enum GangConstructType {
+	JYT = 1; // 聚义厅
+	LC = 2; // 粮仓
+	HZ = 3; // 货栈
+	SST = 4; // 神兽塔
+	XYT = 5; // 降妖塔
+	CW = 6;// 船坞/洞房
+}
+
+// 帮派捐献类型
+enum GangDonateType {
+	DONATE_LOW_LEVEL = 1; // 低级捐献
+	DONATE_MEDIUM_LEVEL = 2; // 中级捐献
+	DONATE_SENIOR_LEVEL = 3; // 高级捐献
+}
+
+// 帮派协议参数
+message GangActionParam {
+	optional int64 applyGangId = 1; // 申请的帮派Id
+	optional string createGangName = 2; // 创建输入的帮派名称
+	optional int64 promoteMemberId = 4; // 晋升的帮众Id
+	optional int64 demoteMemberId = 5; // 降级的帮众Id
+	optional int64 dismissMemberId = 6; // 开除的帮众Id
+	optional int64 transferMemberId = 7; // 移交帮主的帮众Id
+	optional string modifiedNotice = 8; // 修改后的公告
+	optional int32 modifyMinApplyLv = 9; // 修改最低入帮等级
+	optional bool modifyIsWithoutApproval = 10; // 修改入帮是否免审批
+	optional int64 acceptId = 11; // 同意申请的玩家id
+	optional int64 refuseId = 12; // 拒绝申请的玩家id
+	optional GangDonateType donateType = 13; // 捐献类型
+	optional bool isRefresh = 14; // 是否是刷新供奉
+	optional GangConstructType constructType = 15; // 建设升级类型
+	optional MailSendMessage mailSend = 16; // 发送邮件信息
+	optional int32 exchangeId = 18; // 兑换id
+	optional string modifiedDeclaration = 19; // 修改后的帮派宣言
+	optional string newModifyName = 20; // 修改后的帮派名字
+}
+
+// 帮派描述信息(用于申请帮派等显示)
+message GangDescInfoMessage {
+	optional string gangName = 1; //帮派名称
+	optional int32 gangLv = 2; //帮派等级
+	optional int32 gangCurMemberNum = 3; // 帮派当前成员数目
+	optional int32 gangMaxMemberNum = 4; //帮派最大成员数目
+	optional int32 gangWeekFund = 5; //帮派周资金
+	optional int32 gangApplyMinLevel = 6; //帮派申请最低等级
+	optional bool isWithoutApproval = 7; //是否免审批
+	optional int32 rank = 8; //排名
+	optional int32 inactiveContinueDays = 9; //不活跃连续天数
+	optional int64 gangId = 10;// 帮派id
+	optional string gangDeclaration = 11;// 帮派宣言
+	optional int32 gangSSLvLimit = 12;// 神兽等级上限
+	optional int32 gangCYLvLimit = 13;// 妖魔等级上限
+	optional int32 gangFund = 14;// 帮派资金
+	optional int32 gangDayFund = 15;// 帮派日资金
+	optional string gangBossName = 16; //帮主名称
+	optional int32 gangLastWeekFund = 17; //帮派上周周资金
+	optional int32 gangEscortRewardPercent = 18; // 帮派押镖奖励额外百分比
+	optional int32 gangEscortInvitedNum = 19; //帮派押镖被邀请次数
+}
+
+// 玩家申请帮派信息(如果玩家已退出帮派，此时可能显示退出冷却倒计时)
+message PlayerGangApplyInfoMessage {
+	optional string applyGangName = 1; // 申请的帮派名称
+	optional uint64 applyCountdown = 2; // 申请倒计时
+}
+
+// 玩家没有帮派的信息(用于打开帮派按钮出来的面板信息_没有帮派时每次打开面板均要向服务器请求)
+message PlayerNoGangInfoMessage {
+	repeated GangDescInfoMessage gangList = 1; // 帮派列表
+	repeated PlayerGangApplyInfoMessage applyList = 2; // 玩家申请帮派列表
+}
+
+// 帮派事件描述信息
+message GangEventDescInfoMessage {
+	optional GangEventType eventType = 1;// 事件类型
+	optional uint64 eventTime = 2; // 事件时间
+	repeated string eventArgs = 3; // 事件参数
+}
+
+// 帮派成员信息
+message GangMemberInfoMessage {
+	optional int32 vipLv = 1; // vip等级
+	optional string name = 2; // 名字
+	optional int32 lv = 3; // 等级
+	optional GangPosition position = 4 [default = GANG_POSITION_MEMBER]; // 帮派职位
+	optional int32 fund = 5; // 贡献资金
+	optional uint64 joinTime = 6; // 入帮时间
+	optional uint64 offlineTime = 7; // 离线时间
+	optional int32 canDonateTimes = 8; // 可捐献次数
+	optional int32 canWorshipTime = 9; // 可供奉次数
+	optional int32 canSubdueTimes = 10; // 可降妖次数
+	optional int64 memberId = 11;// 帮派成员id
+	optional int32 remainSendMailTimes = 12;// 剩余发送邮件次数
+	optional int32 totalFund = 13;// 帮派累计帮贡
+	optional int32 dayDismissNum = 14;// 每日已开除数目
+	optional uint64 transferedBossTime = 15;// 被移交帮主的时间
+	optional bool isOnline = 16;// 是否在线
+	optional int32 donateTimes = 17; // 已捐献次数
+}
+
+// 帮派具体信息
+message GangDetailInfoMessage {
+	optional GangDescInfoMessage descInfo = 1; // 帮派描述信息
+	optional string gangNotice = 2; // 帮派公告
+	repeated GangMemberInfoMessage memberList = 3; // 帮派成员列表
+	repeated GangEventDescInfoMessage eventList = 4; // 帮派事件列表
+	repeated GangEventDescInfoMessage donateEventList = 5; // 帮派捐献事件列表
+}
+
+// 帮派申请成员信息
+message GangApplyMemberInfoMessage {
+	optional int32 vipLv = 1; // vip等级
+	optional string name = 2; // 名字
+	optional int32 lv = 3; // 等级
+	optional int32 zl = 4; // 战力
+	optional int64 memberId = 5; // id
+}
+
+// 帮派邮件发送消息
+message GangMailSendMessage {
+	optional string mailContent = 1; // 邮件内容
+	repeated string receivers = 2; // 收件人列表
+}
+
+// 帮派管理信息
+message GangManageInfoMessage {
+	repeated GangApplyMemberInfoMessage applyList = 1; // 帮派申请列表
+}
+
+// 帮派建设信息
+message GangConstructInfoMessage {
+	repeated MapItem5 constructInfo = 1;// 帮派建设map,key-帮派建设枚举,value-等级
+}
+
+// 帮派捐献信息 
+message GangDonateInfoMessage {
+	optional int32 gangFund = 1;// 帮派当前资金
+	optional int32 slfFund = 2;// 自己的帮贡
+}
+
+// 玩家有帮派的信息
+message PlayerHasGangInfoMessage {
+	optional GangDetailInfoMessage gangDetailInfo = 1; // 帮派详细信息
+	optional GangManageInfoMessage gangManageInfo = 2; // 帮派管理信息
+	optional uint64 gangDisbandTime = 3; // 帮派解散时间
+	optional GangConstructInfoMessage gangConstructInfo = 4; // 帮派建设信息
+	optional uint64 gangCancelDisbandTime = 5; // 帮派上次取消解散时间
+	optional uint64 gangDisbandCDTime = 6; // 帮派解散倒计时
+	optional uint64 gangCancelDisbandCDTime = 7; // 帮派上次取消解散倒计时时间
+}
+
+// 玩家帮派详细信息,客户端根据玩家是否有帮派以及帮派职位按需读取字段
+message PlayerGangDetailInfoMessage {
+	optional PlayerNoGangInfoMessage noGangInfo = 1; // 无帮派显示信息
+	optional PlayerHasGangInfoMessage hasGangInfo = 2; // 有帮派显示信息
+}
+
+// 晋升返回的消息
+message GangPromoteMessage{
+	optional int32 result = 1;// 返回结果,0表示失败，1表示成功
+}
+
+// 帮派转移消息
+message GangTransferMessage{
+	optional int32 result = 1;// 返回结果,0表示失败，1表示成功
+}
+
+// 降级返回的消息
+message GangDemoteMessage{
+	optional int32 result = 1;// 返回结果,0表示失败，1表示成功
+}
+
+// 开除返回的消息
+message GangDismissMessage{
+	optional int32 result = 1;// 返回结果,0表示失败，1表示成功
+}
+
+// 修改公告返回的消息
+message GangModifyNoticeMessage{
+	optional int32 result = 1;// 返回结果,0表示失败，1表示成功
+}
+
+// 修改审批返回的消息
+message GangModifyApprovalMessage{
+	optional int32 result = 1;// 返回结果,0表示失败，1表示成功
+}
+
+// 同意申请返回的消息
+message GangAcceptMessage{
+	optional int32 result = 1;// 返回结果,0表示失败，1表示成功
+}
+
+// 拒绝申请返回的消息
+message GangRefuseMessage{
+	optional int32 result = 1;// 返回结果,0表示失败，1表示成功
+}
+
+// 帮派解散返回消息
+message GangDisbandMessage{
+	optional uint64 gangDisbandTime = 1; // 帮派解散时间
+}
+
+// 帮派兑换
+message GangExchangeMessage{
+	optional PlayerItem playerItem = 1;// 返回playerItem
+}
+
+// 帮派刷新兑换
+message GangRefreshExchangeMessage{
+	optional PlayerItem playerItem = 1;// 返回playerItem
+}
+
+// 帮派邮件
+message GangSendMailMessage{
+	optional int32 remainSendTimes = 1;// 返回剩余可发送次数
+}
+
+// 帮派排名信息
+message GangRankMessage{
+	repeated GangDescInfoMessage gangList = 1; // 帮派列表
+}
+
+message MapItem5{
+	optional GangConstructType key = 1;
+	optional int32 value = 2;
+}
+
+// 帮派捐献记录
+message GangDonateRecordMessage{
+	repeated GangEventDescInfoMessage records = 1;// 捐献事件列表
+}
+
+// 修改帮派名字--默认服务器会做所有的判断规则，当然客户端可以预判,很多条件参考创建帮派
+message GangModifyNameMessage{
+	optional int32 modifyResult = 1;// 0:修改失败 1:修改成功
+	optional string newGangName = 2;// 新的帮派名字
+}

@@ -1,0 +1,912 @@
+option java_package = "myudfs";
+message CardItem { // 角色:卡牌详情,只能查看自己牌的详情
+	optional int64 id = 1; //数据库生成的id
+	optional int32 cardId = 2; // 卡片配置表中的id
+	optional int32 lv = 3; // 等级
+	optional int32 stage = 4; // 阶层
+	optional uint64 date = 5; // 获得时间
+	optional int32 trainHp = 6; // 修炼hp
+	optional int32 trainAtk = 7; //修炼atk
+	optional int32 trainDef = 8; // 修炼def
+	optional int32 trainMagicAtk = 9; //修炼magicAtk
+	optional int32 trainMagicDef = 10; //修炼magicDef
+	optional int32 trainSuccessRate = 11; //修炼成功率
+	repeated MapItem cardSlots = 12; // key:装备位1234 value :幻化等级
+	repeated EquipmentItems equipments = 14;
+	repeated ShenTongItem shenTongs = 15; // 神通
+	optional int32 zhanFaId = 16; //当前的战法(配置id)
+	optional int32 freshZhanFaId = 17; // 领悟的战法(配置id)
+	optional int32 leaderSkillLv = 18; //绝技等级
+	// 以下战斗中借好友卡属性
+	optional int32 hp = 19;
+	optional int32 atk = 20;
+	optional int32 def = 21;
+	optional int32 magicAtk = 22;
+	optional int32 magicDef = 23;
+	optional int32 hit = 24;
+	optional int32 agi = 25;
+	optional int32 crit = 26;
+	optional int32 ten = 27;
+	optional int32 revenge = 28;
+	optional int32 antiRevenge = 29;
+	optional int32 doubleHit = 30;
+	optional int32 antiDoubleHit = 31;
+	optional int32 speed = 32;
+	// end
+	optional int32 cardStar = 33; // 卡牌星级,升星使用
+	optional int32 battleScore = 34; //战力
+	optional HuFaItem huFaItem = 35;
+	optional int32 stNum = 36; // 熔炼获得神通卷轴的数量
+	optional int32 hfNum = 37; // 熔炼获得护法石数量
+	optional int32 liuDaoHp = 38; // 六道中的当前血量
+	optional int32 liuDaoMaxHp = 39; // 六道中的最大血量
+	optional bool hasEnterLiuDao = 40; // true:已经参加过六道
+	optional int32 critDamageRate = 41;
+	optional bool leader = 42; //true:是队长卡
+	optional int32 quality = 43;
+	optional int32 shentongReturnHunyu = 44; // 卡牌熔炼,神通返回的魂玉值
+	optional int32 otherHunyu = 45; //卡牌熔炼需返回绝技和神通消耗的元神可获得hunyu
+	optional int32 exp = 46; //转生经验
+	optional FabaoItem fabao = 47; // 法宝
+	optional int32 cardStage = 48; //神将分档
+}
+
+message CardPosition {
+	optional int32 pos = 1; //位置
+	optional int64 id = 2; // 卡牌id
+}
+
+message MapItem {
+	optional int64 key = 1;
+	optional int32 value = 2;
+}
+
+message MapItem2 {
+	optional int64 key = 1;
+	repeated int32 value = 2;
+}
+
+message MapItem3 {
+	optional int64 key = 1;
+	repeated string value = 2;
+}
+
+message MapDateItem {
+	optional int32 key = 1;
+	optional uint64 date = 2;
+}
+
+message MapItem4 {
+	optional int64 key = 1;
+	repeated int64 value = 2;
+}
+
+message MapItem6 {
+	optional int32 key = 1;
+	optional int32 value = 2;
+}
+
+message FriendItem { // 好友
+	optional int64 id = 1;
+	optional string name = 2;
+	optional int32 lv = 3;
+	optional CardItem card = 4; // 队长卡
+	optional uint64 date = 5; //
+	optional int32 vip = 6;
+	optional int32 battleScore = 7; //战斗力
+}
+
+message FriendChangeItem { // 好友信息变化通知
+	optional int64 newFriendId = 1; // 新好友id
+	optional int64 deleteFriendId = 2; //删除的好友id
+}
+
+message FriendDetailItem { // 角色:自己的好友详情
+	optional int64 id = 1;
+	optional string name = 2;
+	optional int32 lv = 3;
+	optional int32 qiuYuan = 5; //已求缘次数
+	repeated CardItem cards = 6; // 卡组中的卡
+	optional uint64 date = 7; // 最后活跃时间
+	optional int32 battleScore = 8; //好友战斗力
+	repeated int64 receiveStamina = 9; //收到的体力值
+	optional uint64 loginTime = 10; // 上次登陆时间
+	optional uint64 zhuzhen = 11; // 上次助阵时间
+	optional int32 vip = 12;
+}
+
+message LiuDaoEnemyItemList {
+	repeated LiuDaoEnemyItem enemies = 1;
+}
+
+message LiuDaoEnemyItem {
+	optional int64 id = 1;
+	optional string name = 2;
+	optional int32 lv = 3;
+	repeated CardItem cards = 6; // 出战卡组中的卡
+	repeated int64 cardGroup = 7; // 卡组id
+	repeated int32 fightCardGroup = 8; // 出站顺序
+	optional int32 vip = 9;
+	optional int32 battleScore = 10; // 敌方战斗力
+	optional bool mirror = 11; // true:是镜像
+}
+
+message PieceItem { //角色:元神
+	optional int32 id = 1;
+	optional int32 num = 2;
+}
+
+message PlayerItem { //角色:玩家自己的详细信息
+	optional int64 id = 1;
+	optional string name = 2;
+	optional int32 lv = 3;
+	optional int32 exp = 4;
+	optional int32 daoXing = 5; //道行
+	optional int32 vip = 6;
+	optional int64 gold = 7; //元宝
+	optional int32 shengWang = 8; //声望
+	optional int32 xianYuan = 9; //仙缘
+	optional int32 bagsUnlockGold = 10; //金币解锁的背包数量
+	optional int32 stamina = 11; //体力
+	optional int32 spirit = 12; //精力
+	optional int32 friendsCost = 18; //付费增加的好友上限数量
+	optional int32 trainFreeRenew = 19; //本日免费刷新修炼的次数
+	optional int64 receiveStaminaNum = 20; //本日已领取的赠送体力的数量,0点清0
+	repeated MapItem todayQuestNums = 21; //本日已打关卡次数, key:关卡id
+	repeated MapItem todayQuestRestNums = 22; //本日金币重置关卡次数,key:关卡id
+	repeated int64 donateStamina = 24; //本日已经赠送过体力的好友，这里是好友id
+	repeated int64 receiveStamina = 25; //收到的赠送的体力,这里放的是好友id
+	optional uint64 staminaDate = 26; //体力开始恢复的时间
+	repeated int64 friendId = 27; //好友id
+	optional uint64 loginDate = 28; // 上线时间
+	optional uint64 onlineTime = 29; // 已在线时间
+	optional uint64 bagsUnlockGoldCd = 30; // 元宝解锁减少的cd时间
+	optional int64 coin = 31; //元气
+	repeated MapItem moonStarItem = 32; // 月光宝盒 key：moonStartId  value:星点等级
+	repeated MapItem magicWeapons = 33; //法宝
+	repeated MapDateItem drawCardDate = 36; //三种卡包上次免费抽卡时间
+	optional int32 firstPay = 37; // 0:无首充抽卡 1:有首充抽卡
+	repeated int32 firstPayIds = 38; // 已经抽过首充抽卡的卡包id
+	optional uint64 spiritDate = 39; // 精力开始恢复的时间
+	optional int32 worshipTimes = 40; //被膜拜次数
+	repeated int64 worshipIds = 41; //膜拜过的玩家
+	optional uint64 gainRewardTime = 42; //领取结算奖励的时间
+	repeated int32 exchangeTimes = 43; //兑换次数
+	repeated int64 mails = 44;
+	repeated int64 mailFinished = 45;
+	repeated int64 mailDeleted = 46;
+	repeated PvpFightResultItem pvpFightResult = 47; //个人PVP战报记录
+	optional int32 buyStamina = 48; //本日购买体力次数
+	optional int32 buySpirit = 49; // 本日购买精力次数
+	optional int32 pvpWins = 50; //本日pvp连胜次数
+	repeated MapItem shopItems = 53; //购买的商品数量
+	optional int32 loginDays = 54; //已登陆的天数
+	repeated MissionItem missions = 55; // 任务
+	optional int64 silver = 56; // 银两
+	repeated CardItem cards = 57; //自己的卡牌
+	repeated int64 cardGroup = 58; //卡组
+	repeated PieceItem pieces = 59; //元神
+	repeated Items items = 60; //物品
+	repeated HuFaItem hufas = 61; //护法
+	repeated TrainItem trains = 62; //卡牌修炼属性
+	repeated QuestItem quests = 64; //关卡
+	repeated int32 cardGroupFight = 65; //战前卡组与自己的卡组对应关系
+	repeated int32 magicWeaponGroup = 66; //法宝位置
+	optional uint64 rewardLastTime = 68; // 领取结算奖励的剩余时间
+	repeated int32 pvpWinReward = 69; // pvp连胜奖励 pvp连胜次数
+	repeated int32 loginReward = 70; // 连续登陆奖励
+	repeated int32 pvpFightNumReward = 71; //战斗胜利次数奖励
+	repeated int32 drawCardReward = 72; //领取抽卡次数奖励
+	optional uint64 gainBuyStamina = 73; //领取购买体力奖励的时间
+	optional uint64 gainBuySpiritReward = 74; //领取购买精力奖励的时间
+	repeated int32 gainQiuYuanReward = 75; //领取过的求缘奖励
+	repeated int32 gainLvUpReward = 76; // 领取过的升级奖励
+	repeated int32 gainChapterReward = 77; //章节奖励
+	repeated int32 gainChapterStarReward = 79; //满星奖励
+	repeated int32 gainFriendNumReward = 80; //好友数量奖励
+	repeated int32 gainCardReward = 81; //特殊卡牌奖励
+	repeated int32 gainItemReward = 82; //特殊装备奖励
+	optional uint64 gainEveryDayTili = 83; //每天登陆领取体力
+	optional uint64 gainEveryDayGold = 84; //每天登陆领取元宝
+	optional int32 receiveXianYuan = 85; //可领取的仙缘值
+	optional int32 drawCardTimes = 87; //当天抽卡次数
+	optional int32 pvpFightWinNum = 88; //pvp战斗胜利次数
+	optional int32 multiLoginDays = 89; //连续登陆天数
+	optional int64 totalPayGold = 90; //总充值元宝 只多不少
+	repeated int32 amountPaymentReward = 91; // 领取过的充值奖励
+	repeated MissionItem missionsDaily = 93; // 日常任务
+	optional bool pvpNewFightFlag = 94; // true:有新的pvp战报
+	optional int32 qiuyuan = 95; // 当天求缘次数
+	optional int32 qiuyuanGold = 96; // 当天购买求缘次数
+	optional bool newMail = 97; // 是否有新邮件
+	optional int32 pvpWinNum = 98; //每日pvp胜利次数
+	optional bool firstPayReward = 99; // false:未领取过首充奖励 true:已领取过首充奖励
+	repeated int32 vipGifts = 100; //领取过的vip礼包
+	optional bool vipReward = 101; // 今天是否领取了月卡奖励 ture：领取了
+	optional int32 vipCard = 102; //月卡次数
+	repeated MapItem vipAllGift = 103;
+	optional int32 guideIndex = 104;
+	optional bool isQianDao = 105; // 今天是否签到
+	optional MapItem qianDao = 106; //签到信息 key 是当前月 value是签到次数 最后一次的话领取奖励后就变成下个月
+	optional int32 battleIndex = 107; // 前端用
+	optional int32 caishenCoinNum = 108; // 今天财神次数 0点清零
+	repeated int32 triggerGuideIndex = 109; //触发式引导阶段标记
+	repeated int32 chapterEasyReward = 110;
+	repeated int32 chapterNormalReward = 111;
+	repeated int32 chapterHardReward = 112;
+	repeated int32 activityEasyReward = 113;
+	optional int32 cardEffectNum = 114; // 新增卡组位播放特效次数
+	repeated int32 baoXiangReward = 115; // 领取过的宝箱奖励
+	optional int32 newFriendInvite = 116; // 是否有新的好友申请
+	optional int64 yunyouRefreshTime = 117; // 上次云游仙人刷新时间
+	repeated int32 yunyouItems = 118; // 购买过的云游道具
+	optional int32 lvReward = 119; // 上次等级抽奖
+	optional int64 qiuBaoDate = 120;
+	optional int32 qiuBaoTimes = 121;
+	repeated MapItem itemTask = 122;
+	repeated MapItem cardTask = 123;
+	repeated int32 collectCardReward = 124;
+	repeated int32 cardReward = 125;
+	repeated int32 itemReward = 126;
+	repeated MapItem vipNums = 127; //vip 人数
+	repeated int32 firstPayExtraIds = 128; // 已获得首充额外奖励的支付id列表
+	optional int32 assetBundle_State = 129; // 记录资源下载状态
+	optional int64 userId = 130; // 帐号id
+	optional int32 serverId = 131; // 服务器id
+	optional string username = 132; // 用户名
+	repeated PvpExchangeItem pvpExchangeItems = 133; // pvp声望兑换物品
+	optional int32 hunyu = 134; // 魂玉
+	repeated int32 firstDrawIds = 135; // 首抽卡包id列表
+	optional uint64 openDate = 136; //服务器开服时间
+	repeated MapItem todyTastePantaos = 137; // 当天指定时间是否品尝了蟠桃
+	optional int32 battleScore = 138; // 总战力
+	optional int32 lingLi = 139; // 灵力
+	optional int32 buyLingli = 140;
+	optional uint64 lingLiDate = 141;
+	repeated int32 shenMoDuiHuan = 151; // 神魔兑换道具
+	repeated int32 buyShenMoItem = 152; // 购买的神魔兑换道具
+	optional int32 xiuWei = 153;
+	optional bool hasPvpReward = 154; //true:有新pvp奖励
+	optional int64 gongDe = 155; // 功德
+	repeated int32 gongDeReward = 156; // 领取过的功德达标奖励
+	optional int32 rankRise = 157; //1下降 2上升  0不变
+	optional int64 rank = 158; //排名
+	repeated MapItem drawCard = 159; // key:抽卡id 1-2  抽卡次数 1-5
+	optional bool hufaOpen = 160; //
+	optional int32 caishenSilverNum = 161; //财神银两
+	optional bool drawCardReward2 = 162; //每日抽卡奖励 0点清零
+	repeated string playerPrefs = 163;
+	repeated DaliyMissionItem missionMap = 164;
+	optional int32 missionNum = 165; // 完成每日任务的个数
+	optional int32 yunyouNum = 166; // 云游兑换数量
+	optional int32 pvpExchangeNum = 167; // pvp兑换数量
+	optional int32 friendNum = 168;
+	optional bool clearShenMoItem = 171; // 清空神魔兑换 true清空
+	optional bool refreshHour24 = 172; // 0点清空数据 true：清空
+	optional bool pay = 173; //true:充值消息
+	optional bool isShutUp = 174;
+	optional uint64 shutUpDate = 175;
+	optional uint64 shutUpEnd = 176;
+	repeated ActivityItem activityItem = 177;
+	repeated PayReward payReward = 178;
+	optional int32 yunYouTime = 179; //云游刷新次数
+	optional int32 pvpChangeTime = 180; //决战兑换商店刷新次数
+	optional int32 shenMoChangeTime = 181; //神魔兑换商店次数
+	optional int32 shenMoNum = 182; // 挑战神魔次数
+	optional int32 itemLvUpNum = 183; // 装备强化次数
+	optional int32 cardLvUpNum = 184; // 卡牌强化次数
+	optional int32 shenTongNum = 185; // 提升申通次数
+	optional int32 skillNum = 186; // 绝技升级次数
+	optional int32 huFaNum = 187; // 护法洗练次数
+	optional int32 xiuLianNum = 188; // 卡牌修炼次数
+	optional int32 changeName = 189; // 修改名字的次数
+	repeated int32 chengjiuReward = 190; //领取过的pvp成就奖励
+	optional int32 fenXiangRewardTimes = 191; //微信本日分享次数
+	optional bool weiXinFirstShare = 192; // true:微信首次分享奖励已经领取
+	optional bool weiXinOpen = 193; // true:微信分享活动开启
+	optional bool xilianOpen = 194; //洗练是否开启
+	optional int32 pvpWinMax = 195; // 连胜次数，奖励用
+	optional string inviteCode = 196; //个人邀请码
+	optional int32 inviteNum = 197; // 邀请人数
+	optional int64 inviterId = 198; // 自己的邀请人id
+	optional bool clearFirstPayExtraIds = 199; // true:清空客户端的FirstPayExtraIds列表
+	optional MapItem3 loginActivity = 200; //登陆领奖活动
+	optional int32 choukaQuan = 201; //抽卡券
+	optional int32 shenJiangScore = 206; //神将活动积分
+	optional int32 shenJiangTotalScore = 207; // 神将活动总积分
+	optional int32 shenJiangRank = 208; // 神将活动排名
+	repeated int32 inviteNumReward = 209; // 已经领过的邀请人奖励
+	repeated string yuanshenBox = 210; //魂匣推荐元神
+	repeated MapItem boxs = 211; // 宝箱 key：宝箱id value：数量
+	repeated MapItem buyBox = 212; // 购买宝箱的次数，0点清零
+	optional int32 zhuanpan = 213; //每天转盘次数
+	repeated int32 sevenReward = 214; // 领取过的7天奖励
+	repeated int32 playerNum = 215; // 邀请码需要达到的人数
+	repeated int32 rewardId = 216; // 邀请码奖励id
+	optional bool inviteReward = 217; // true:已经领取过填写邀请人奖励
+	optional int64 lingHun = 218; // 六道中的货币：灵魂
+	repeated int32 liuDaoDuiHuanIds = 219; // 六道中的兑换物品
+	repeated int32 liuDaoDuiHuanIdsBuyed = 220; // true:已经购买的六道兑换物品
+	optional int32 liuDaoChangeTime = 221; // 六道兑换　当天已刷新次数
+	optional int32 liuDaoBaoXiangOpenNum = 222; // 六道宝箱已开次数
+	optional int32 vipCardAllLift = 226; //1:为终身月卡用户
+	optional bool vipAllLifeReward = 227; // true:本日终身月卡奖励已经领取
+	repeated int64 cardGroupLiuDao = 228; //六道卡组(卡牌的id,  card.id)
+	repeated int32 cardGroupFightLiuDao = 229; //六道战前卡组与自己的卡组对应关系
+	repeated MapItem drawCardFree = 230; // 免费抽卡的次数　key:抽卡id 1-2  抽卡次数 1-5
+	optional int32 liudaoEnterHeroLimit = 231; // 六道允许进入的最多卡牌数量
+	optional int32 todayQuestNum = 232; // 每天任意西行次数0点清零
+	optional int32 cardId = 233; // 队长卡配置id
+	optional int32 enterLiuDaoTimes = 234; //每天六道派遣的次数
+	optional int32 xunshan = 235; // 巡山次数
+	optional int32 dailyLeftTimes = 236; // 人参果每日赠送次数的剩余次数
+	optional int32 dailyBuyTimes = 257; // 人生果每日vip购买次数
+	optional int64 nextCDTime = 258; // 人参果下次进行人参果活动的冷却时间
+	optional int32 shouHuId = 259; // 人参果活动开始时的守护id
+	optional int32 cancelCDTimes = 260; // 人参果每日取消cd次数
+	repeated int32 xunshanStr = 261; // 巡山对话id
+	optional PlayerGangItem gangInfo = 262; // 玩家帮派信息
+	optional bool hasDFBet = 263; // 斗法是否已押注
+	repeated MapItem gangExchange = 264; // 帮派兑换信息 key:兑换id value:兑换可剩余次数,次数为0则表示已售罄
+	optional int32 gangRefreshExchangeTimes = 265; // 帮派兑换刷新次数
+	optional DFTeamItem dfTeamInfo = 266; // 斗法队伍信息
+	optional int32 vipDailyGiftBuyCount = 267; // 每日vip礼包的当日购买次数
+	optional int32 trialsDFTimes = 268; // 斗法玩家选拔赛可斗法次数，次数不为0则斗法图标高亮
+	optional int64 dfBetId = 269; // 押注的玩家id
+	optional Xunxian xunxian = 270; // 寻仙捉妖的相关信息
+	optional int32 auctionType = 271; // 拍卖行限制类型 0:无限制 1:有限制
+	optional SecurityCodeItem securityCodeItem = 272; // 安全码信息
+	optional bool login1100 = 273; // true:第一次登陆成功后获得的playerItem 1100
+	optional bool isShowDFInMainUI = 274; // 是否在主ui显示斗法
+	optional bool isVipUpByPlayerLv = 275; // 是否当角色的等级到达指定等级时
+	optional HongbaoActivityMessage hongbaoActivitys = 276; // 红包活动数据
+	optional bool isOpenedBoxEveryDay = 277; // 龙宫宝箱每天是不是打开了龙宫宝箱
+	optional bool admobSwitch = 278; // 客户端广告判断
+	// optional int32 baoKuTime=279;// 当前剩余次数
+	optional ArenaTeamItem arenaTeamInfo = 280; // 竞技场队伍信息
+	optional int32 sectionGuideIndex = 281;
+	optional int32 jiaoYiBuy = 282; // 每日任务交易所购买
+	optional int32 jiaoYiSale = 283; // 每日任务交易所出售
+	optional int32 dailyLongGongBox = 284; // 每日任务开启龙宫宝箱
+	optional int32 dailyLiuDao = 285; // 每日任务参与轮回塔
+	optional PlayerEscortItem escortItem = 286; // 押镖信息
+	optional DFTeamItem escortTeamInfo = 287; // 押镖队伍信息,和队伍信息返回一致
+	optional int32 position = 288; // 帮派位置
+	optional DFTeamItem shenMoTeamItem = 289; // 神魔队伍信息
+	optional DFTeamItem pvpTeamItem = 290; // pvp队伍信息
+	optional DFTeamItem fbTeamItem = 291; // 资源副本队伍信息
+	optional int32 gangModifyNameTimes = 292; // 帮派改名次数
+	optional uint64 startTime_MultiExp = 293; // 双倍经验开始时间
+	optional uint64 endTime_MultiExp = 294; // 双倍经验结束时间
+	optional int32 rate = 295; //经验倍率
+	optional int64 nextTime = 296; // 下次六道扫荡时间
+	optional int32 liuDaoEnemyStartIndex = 297; // 六道扫荡开始关卡索引
+	optional int32 liuDaoEnemyEndIndex = 298; // 六道扫荡结束关卡索引
+	repeated int32 rewardIds = 299; // 当前扫荡奖励
+	optional int32 liuDaoSweepHaveReward = 300; // 六道扫荡可否领奖, 1有奖, 2没奖
+	repeated PayReward exchangeItemReward = 301;
+	optional int32 templeDayRemainSeekTimes = 302; // 神殿每日剩余探寻次数
+	optional DFTeamItem templeTeam = 303; // 神殿队伍_无护法
+	repeated DoubleReward doubleReward = 304; //各种翻倍活动
+	optional YunyingActivity shenmoRankActivityReward = 305;
+	optional YunyingActivity arenaRankActivityReward = 306;
+	optional YunyingActivity openBoxRankActivityReward = 307;
+	repeated int64 templeCultivateCards = 308; // 神殿已上阵修炼的卡牌列表
+	optional int32 jingYanDanCostGold = 309; //转生使用元宝次数
+	optional int32 cardExpDeclineNum = 310;
+	optional int32 rankValue = 311;	// 排行活动数值
+	optional bool hasTempleEvent = 312;// 是否有神殿事件
+	optional int32 redPacketId = 313;//春节活动红包id
+	optional int32 redPacketNum = 314;// 春节活动红包数目
+	optional CustomPushItemMessage customPushItemMessage = 315; // 个性化推送
+	optional int32 zhuanPanNums=316;// 本次活动周期已经转的次数
+	repeated int32 zhuanPanOpenIds=317; //已经开过的箱子
+}
+
+message DoubleReward {
+	optional uint64 startDate = 1;
+	optional uint64 endDate = 2;
+	optional int32 rate = 3;
+	repeated int32 type = 4; // 1.副本闯关  2.资源副本 3.轮回塔命匣 4.神魔掉落 5.神魔出现几率 6.魔抽指定碎片掉落
+	optional string title = 5;
+	optional string content = 6;
+}
+
+message HongbaoActivityMessage {
+	optional uint64 startTime = 1; // 开始时间
+	optional uint64 endTime = 2; // 结束时间
+	optional string decription = 3; // 活动描述
+	optional int32 ownMoney = 4; // 角色已经抢到的钱(单位是分)
+}
+
+message ZhuanPanItem {
+	optional int32 lv = 1;
+	optional int32 vip = 2;
+	optional uint64 beginDate = 3;
+	optional uint64 endDate = 4;
+}
+
+message PayReward {
+	optional string id = 1;
+	optional int32 gold = 2;
+	optional int32 times = 3;
+	optional int32 gain = 4;
+}
+
+message YunyingActivity {
+	optional string id = 1;
+	optional int32 gold = 2;
+	optional int32 times = 3;
+	optional int32 gain = 4;
+	optional int32 type = 5;
+}
+
+message TrainItem { // 角色:卡牌修炼属性
+	optional int32 trainType = 1;
+	optional int32 quality = 2;
+	optional bool used = 3;
+}
+
+message HuFaItem { // 角色:护法
+	repeated int64 cards = 1; //护法卡
+	optional int32 quality1 = 2; // 青龙品质
+	optional int32 quality2 = 3; // 白虎品质
+	optional int32 quality3 = 4; // 玄武品质
+	optional int32 quality4 = 5; // 朱雀品质
+	optional int32 addon1 = 6; // 青龙加成
+	optional int32 addon2 = 7; // 白虎加成
+	optional int32 addon3 = 8; // 玄武加成
+	optional int32 addon4 = 9; // 朱雀加成
+}
+
+message Items { // 角色:物品
+	optional int64 id = 1;
+	optional int32 itemid = 2;
+	optional int32 lv = 3;
+	//	optional string lvcost = 4;
+	optional int32 num = 5;
+	optional int32 advancedTimes = 6; //锻造次数
+	repeated MapItem fenglingProperty = 7; //封灵属性
+	optional int32 usedNum = 8; //封灵属性的个数
+	optional int32 isLocked = 9; //是否被配置 1:锁定
+	repeated MapItem flLockedProperty = 10; //封灵锁定属性
+	optional uint64 ownTimes = 11; //拥有时间
+	optional int32 type = 12; // 1:删除
+}
+
+message QuestItem {
+	optional int32 id = 1;
+	optional int32 star = 2; //星级
+	repeated int32 starId = 3; //评星事件id
+}
+
+message EquipmentItems {
+	optional int32 equipmentPosition = 1;
+	optional int64 equipmentId = 2;
+}
+
+message MailEncourage {
+	optional int32 gold = 1; //元宝
+	optional int32 stamina = 2; //体力
+	optional int32 spirit = 3; //精力
+	optional int32 quility = 4; // 魂品质
+	optional int32 num = 5; // 数量
+	optional int32 shengWang = 6; // 声望
+	optional int32 xianYuan = 7; // 仙缘
+	optional int32 daoxing = 8; // 道行
+	//	optional int32 cardSignId1 = 9; //卡牌元神
+	//	optional int32 cardSignNum1 = 10; //卡牌元神数量
+	//	optional int32 cardSignId2 = 11; //卡牌元神
+	//	optional int32 cardSignNum2 = 12; //卡牌元神数量
+	//	optional int32 cardSignId3 = 13; //卡牌元神
+	//	optional int32 cardSignNum3 = 14; //卡牌元神数量
+	//	optional int32 magicWeaponId1 = 15; //法宝Id
+	//	optional int32 mwNum1 = 16; // 法宝数量
+	//	optional int32 magicWeaponId2 = 17; //法宝Id
+	//	optional int32 mwNum2 = 18; // 法宝数量
+	//	optional int32 magicWeaponId3 = 19; //法宝Id
+	//	optional int32 mwNum3 = 20; // 法宝数量
+	//	optional int32 itemId1 = 21; // 道具Id
+	//	optional int32 itemNum1 = 22; // 道具数量
+	//	optional int32 itemId2 = 23; // 道具Id
+	//	optional int32 itemNum2 = 24; // 道具数量
+	//	optional int32 itemId3 = 25; // 道具Id
+	//	optional int32 itemNum3 = 26; // 道具数量
+	optional int32 coin = 27; // 元气
+	optional int32 silver = 28; //银两
+	optional int32 vipGold = 29; // 用于提升vip的元宝
+	optional int32 xiuWei = 30; // 修为
+	optional int32 lingli = 31; //灵力
+	optional int32 choukaQuan = 32; //抽卡券
+	optional int32 hunyu = 33;
+	optional int32 lingHun = 34;
+	//	optional int32 boxId1 = 35;
+	//	optional int32 boxNum1 = 36;
+	//	optional int32 boxId2 = 37;
+	//	optional int32 boxNum2 = 38;
+	repeated MapItem6 cardSignItems = 39; //元神列表
+	repeated MapItem6 items = 40; //道具列表
+	repeated MapItem6 boxItems = 41; // 宝箱列表
+}
+
+message PvpFightResultItem {
+	optional int32 type = 1; // 1:挑战胜利 2:挑战失败 3:被挑战成功 4:被挑战失败 5:掠夺成功 6:掠夺失败 7:被掠夺成功 8:被掠夺失败
+	optional string targetName = 2; //另一方的名字
+	optional int32 floor = 3; //变化的楼层
+	optional int32 gold = 4; //获得的金币
+	optional int32 shengWang = 5; //获得的声望
+	optional int32 targetFloor = 6; //另一方当前的楼层
+	optional uint64 date = 7; //日期
+	optional int64 targetId = 8; //另一方的id
+	optional int32 coin = 9;
+	optional int64 resultId = 10; //战报id
+	optional bool displayFightResultButton = 11; // true:显示战报按钮 false:不显示
+}
+
+message ShenTongItem {
+	optional int32 id = 1; //神通配置id
+	optional int32 exp = 2; //神通当前经验
+	optional int32 index = 3; //所在的神通槽位
+	optional int32 expMultiple = 4; //经验暴击倍数
+	optional bool available = 5; // 借好友卡地方用
+	optional bool isTiansheng = 6;
+}
+
+message MissionItem {
+	optional int32 id = 1;
+	optional int32 status = 2; // 1:任务条件完成，可交任务
+	optional bool dialogShowed = 3; // true:对白已播放
+	optional int32 targetFinished = 4; // 目标1达成(预留的扩展，防止策划继续加达成的目标)
+	optional int32 type = 5; // 0:非日常任务 1:日常任务
+	optional int32 aimNum = 6; // 已完成的次数
+	optional string guideId = 7;
+}
+
+message ServerListMessageItem {
+	optional int32 id = 1;
+	optional string name = 2;
+	optional string ip = 3;
+	optional int32 port = 4;
+	optional int32 status = 5; // 1:暂未开放 2:正常 3:火爆 4:新服 5:维护
+	optional int32 tuiJian = 6; // 1:推荐
+	optional bool isLogin = 7; //是否登录过这个服务器
+}
+
+message VipPlayersItem {
+	repeated MapItem vipPlayers = 1;
+}
+
+message PvpExchangeItem {
+	optional int32 id = 1; // id
+	optional int32 costCredit = 2; // 兑换消耗的声望
+	optional int32 rewardCard = 3; // 元神id
+	optional int32 rewardCardNum = 4; // 元神数量
+	optional int32 rewardItem = 5; // 道具id
+	optional int32 rewardItemNum = 6; // 道具数量
+	optional int32 rewardMagicWeapon = 7; // 法宝id
+	optional int32 rewardMagicWeaponNum = 8; // 法宝数量
+	optional bool selled = 9; // true:已经兑换过了
+}
+
+message ShenMoItem {
+	optional int64 id = 1; // 唯一id
+	optional int32 shenMoId = 2; //配置id
+	optional int32 hp = 3; // 剩余血量
+	optional int32 maxHp = 4; // 最大血量
+	optional uint64 escapeDate = 5; // 逃亡时间
+	optional string name = 6; // 发现者
+	optional int64 playerId = 7; // 发现者 player.id
+	optional int32 lv = 8; //神魔等级
+	optional bool share = 9; // true:已经分享过
+	repeated int32 cardConfigIds = 10; //cardConfig.id
+	optional bool finderReward = 11; //true:可以领取发现者奖励
+	optional bool maxDmgReward = 12; //true:可以领取最大伤害奖励
+	optional bool killerReward = 13; //true:可以领取击杀奖励
+	optional bool finderReward2 = 14; //true:领取过奖励
+	optional bool maxDmgReward2 = 15; //true:领取过奖励
+	optional bool killerReward2 = 16; //true:领取过奖励
+	optional string playerNameKiller = 17; //击杀者名字
+	optional bool attacked = 18; // true:已经参与过打此神魔
+	optional bool attackReward = 19; //true:可以领取参与者奖励
+	optional bool attackReward2 = 20; //true:领取过参与者奖励
+}
+
+message DaliyMissionItem {
+	optional int32 rewardId = 1;
+	repeated int32 contentId = 2;
+}
+
+message ActivityItem {
+	optional int32 type = 1;
+	optional string content = 2;
+	optional uint64 beginDate = 3;
+	optional uint64 endDate = 4;
+	repeated ActivityRewardItem rewardItem = 5;		// 排名奖励
+	optional int32 id = 6;
+	optional int32 lv = 7;
+	optional int32 vip = 8;
+	optional string title = 9;
+	optional string model = 10;
+	optional string name = 11;
+	repeated ActivityRewardItem timesRewardItem = 12;	// 领取奖励
+	repeated ActivityRewardItem onlyRewardItem = 13;		// 活动结束的次数奖励
+}
+
+message LoginActivity {
+	optional int32 type = 1;
+	optional string content = 2;
+	optional uint64 beginDate = 3;
+	optional uint64 endDate = 4;
+	//	repeated ActivityRewardItem rewardItem = 5;
+	optional int32 id = 6;
+	optional int32 lv = 7;
+	optional int32 vip = 8;
+	optional string title = 9;
+	optional string model = 10;
+}
+
+message ActivityRewardItem {
+	optional string id = 1;
+	optional int32 goalGold = 2;
+	optional string title = 3;
+	optional int32 times = 4;
+	repeated RewardItem protoData = 5;
+	optional int32 status = 6; // 0 已经领过   1 可以领     2 时间没到还不能领奖   3奖励过期
+	optional bool notValide = 7; // true:不可领取
+	repeated RewardItem consume = 8;
+}
+
+message RewardItem {
+	optional int32 type = 1;
+	optional int32 id = 2;
+	optional int32 num = 3;
+}
+
+message ChatItem {
+	optional int32 id = 1;
+	optional string name = 2;
+	optional string content = 3;
+	optional int32 vip = 4;
+	optional int32 type = 5; // 1世界消息  2:对好友 3:对自己
+	optional uint64 chatDate = 6;
+}
+
+message PvpFightPlayerItem {
+	optional int64 id = 1;
+	optional string name = 2;
+	optional int32 floor = 3;
+	optional int32 cardId = 4; //卡牌配置id
+	optional int32 battleScore = 5; //战力
+	optional int32 lv = 6; //等级
+	optional int32 worshiptimes = 7; //被膜拜次数
+	optional int32 pvpWins = 8; //连胜
+	optional int32 pvpFightTotalNum = 9; //总战斗次数
+	optional int32 pvpFightWinNum = 10; //胜利次数
+	optional int64 rewardLastTime = 11; //领取奖励的剩余时间
+	optional int32 rewardShengWang = 12; // 战胜后可获得的声望
+	optional int32 vip = 13;
+	optional int32 rewardCoin = 14; // 战胜后可获得的coin
+	optional uint64 floorDate = 15; //记录层数变化的时间
+	repeated PvpFailFightResult pvpResult = 16; //战报id
+}
+
+message PvpFailFightResult {
+	optional int64 resultId = 1;
+	optional string attackName = 2;
+	optional int32 type = 3;
+	optional uint64 fightDate = 4;
+}
+
+// 玩家帮派信息
+message PlayerGangItem {
+	optional string gangName = 1; // 帮派名字
+	optional GangPosition position = 2; // 帮派职位
+	optional int32 fund = 3; // 帮派资金/帮贡
+	optional bool hasNewEvent = 4; // 是否有新事件，如果有新事件则帮派图标显示红点
+	optional int64 gangId = 5; // 帮派Id
+	optional uint64 exitGangTime = 6; // 离开帮派时间
+}
+
+// 帮派职位枚举
+enum GangPosition {
+	GANG_POSITION_BOSS = 1; //帮主
+	GANG_POSITION_ELDER = 2; // 长老
+	GANG_POSITION_MEMBER = 3; // 帮众
+}
+
+// 斗法活动阶段，不同的阶段斗法面板显示的内容不同
+enum DFStage {
+	STAGE_NOT_START_NO_CHAMPIONS = 0; // 未开始阶段_无冠军
+	STAGE_NOT_START = 1; // 未开始阶段
+	STAGE_TRIALS = 2; // 选拔赛阶段
+	STAGE_TOP32 = 3; // 32强阶段
+	STAGE_TOP16 = 4; // 16强阶段
+	STAGE_TOP8 = 5; // 8强阶段
+	STAGE_SEMI_FINAL = 6; // 半决赛
+	STAGE_FINAL = 7; // 决赛
+}
+
+// 选拔赛分组
+enum DFTrialsGroup {
+	GROUP_A = 1; // A组
+	GROUP_B = 2; // B组
+	GROUP_C = 3; // C组
+	GROUP_D = 4; // D组
+}
+
+// 参加斗法的玩家信息
+message DFPlayerInfoMessage {
+	optional int64 roleId = 1; // 玩家id
+	optional int32 trialsRank = 2; // 选拔赛排名
+	optional int32 trialsPoints = 3; // 选拔赛积分
+	optional string roleName = 4; // 角色名字
+	optional DFTrialsGroup group = 5; // 玩家所在分组
+	optional int32 vipLv = 6; // 玩家vip等级
+	optional int32 totalZL = 7; // 玩家总战力
+	optional string gangName = 8; // 帮派名字
+	optional int32 trialsDFTimes = 9; // 选拔赛斗法次数
+	optional int32 trialsFreeRefreshTimes = 10; // 选拔赛斗法免费刷新次数
+	optional DFStage stage = 11; // 斗法玩家所在斗法阶段
+	optional int32 dfVipBuyTimes = 12; // 斗法Vip已购买次数
+	optional bool hasBeted = 13; // 是否已被押注
+	optional int32 buyRefreshTimes = 14; // 选拔赛已购买刷新次数
+	optional int32 betTimes = 15; // 被押注次数
+	repeated int64 betPlays = 16; // 押注玩家列表
+	optional int32 promoteWinTimes = 17; // 晋级赛胜利次数
+	repeated int64 trialsRivalIds = 18; // 选拔赛挑战对手
+	optional int32 leaderCardCfgId = 19; // 玩家队长卡牌配置id,决赛/历届斗神阶段展示
+	optional int32 championNum = 20; // 第X届冠军
+	optional int64 uniqueId = 21; // 冠军唯一id
+}
+
+// 邮件发送信息
+message MailSendMessage {
+	repeated int64 receivers = 1; // 收件人列表-玩家id
+	optional string mailContent = 2; // 邮件内容
+}
+
+// 斗法队伍卡组消息
+message DFTeamCardGroupMessage {
+	optional PlayerItem playerItem = 1;
+}
+
+message Xunxian {
+	optional int32 xunxianCountDaily = 1; // 寻仙捉妖每日挑战次数
+	optional uint64 xunxianCD = 2; // 下一次寻仙捉妖的cd时间
+	optional int32 xunxianQuestId = 3; // 下一次寻仙捉妖的关卡id
+	optional int32 xunxianId = 4; // 下一次寻仙捉妖的id
+	optional int32 modelId = 5; // 配置表里的模型ID
+}
+
+message TestTimeMessage {
+	repeated int64 times = 1;
+}
+
+message BenchmarkMessage {
+	repeated string infos = 1;
+}
+
+// 安全码冻结状态
+enum SecurityCodeFreezeState {
+	UNFREEZE = 0; // 未冻结
+	FREEZE_CLEAR_CODE = 1; // 密码清除冻结
+	FREEZE_INPUT_ERROR = 2; // 输入错误冻结
+}
+
+// 安全码冻结信息
+message SecurityCodeFreezeItem {
+	optional SecurityCodeFreezeState freezeState = 1; // 冻结状态
+	optional uint64 freezeCountdown = 2; // 冻结倒计时
+	optional uint64 freezeEndTime = 3; // 冻结结束时间
+}
+
+// 安全密码信息
+message SecurityCodeItem {
+	optional string securityCode = 1; // 安全码
+	optional bool isEnableSecurityCode = 2; // 是否启用安全码
+	optional SecurityCodeFreezeItem freezeItem = 3; // 冻结信息
+	optional int32 inputErrorCounts = 4; // 安全密码连续输入错误次数
+	optional bool hasInputCorrectCode = 5; // 是否已输入过正确的安全密码
+}
+
+// 竞技场活动阶段
+enum ArenaStage {
+	NOT_STARTED = 1; // 未开始阶段:该阶段显示下次比赛开始倒计时
+	START_TEAM_SET = 2; // 开始阶段_设置队伍:该阶段显示比赛结束倒计时
+	START_SEEK_PARTNER = 3; // 开始阶段_寻找队友:1.确认队伍后进入该阶段 2.该阶段显示队友列表和寻找按钮
+	START_SEEK_RIVAL = 4; // 开始阶段_寻找对手:数据同上
+	START_FIGHT = 5; // 开始阶段_战斗:该阶段主要显示对阵双方
+	START_SEEK_NEXT_RIVAL = 6; //开始阶段_寻找下一个对手:显示加上x秒后自动寻找
+}
+
+// 竞技场队伍信息
+message ArenaTeamItem {
+	repeated MapItem4 arenaCardHuFaGroup = 1; //竞技场护法卡组,key-卡牌id value-护法列表
+	repeated int32 arenaCardGroupFight = 2; //战前卡组与自己的卡组对应关系
+}
+
+// 竞技场队伍卡组消息
+message ArenaTeamCardGroupMessage {
+	optional PlayerItem playerItem = 1;
+}
+
+// 玩家押镖信息
+message PlayerEscortItem {
+	optional int32 escortTimes = 1; // 押镖次数
+	optional int32 robTimes = 2; // 抢宝次数
+	optional int32 buyEscortTimes = 3; // 购买的押镖次数
+	optional int32 buyRobTimes = 4; // 购买的抢宝次数
+	optional uint64 robStartCDTime = 5; // 抢宝CD开始时间
+	optional int64 slfEscortShipId = 6; // 自己押运的宝船id
+	optional int32 slfEscortShipCfgId = 7; // 押运的宝船配置id
+	optional int32 refreshShipTimes = 8; // 刷新宝船的次数
+	optional bool canEscort = 9; // 是否可押镖,该条件用来客户端判断红叹号的条件
+}
+
+// 押镖队伍卡组消息
+message EscortTeamCardGroupMessage {
+	optional PlayerItem playerItem = 1;
+}
+
+// 斗法队伍信息
+message DFTeamItem {
+	repeated MapItem4 dFCardHuFaGroup = 1; //斗法护法卡组,key-卡牌id value-护法列表
+	repeated int32 dFCardGroupFight = 2; //战前卡组与自己的卡组对应关系
+}
+
+message BuyEscortNumMessage {
+	optional PlayerItem playerItem = 1;
+}
+
+message BuyRobNumMessage {
+	optional PlayerItem playerItem = 1;
+}
+
+// 神殿队伍卡组消息
+message TempleTeamCardGroupMessage {
+	optional PlayerItem playerItem = 1;
+}
+
+message FabaoItem {
+	optional int32 fabaoId = 1;
+	optional int32 qualityId = 2;
+	optional int32 exp = 3;
+	optional int32 lv = 4;
+	repeated string shentongIds = 5;
+	repeated string skillIds = 6;
+	optional int32 hp = 7;
+	optional int32 atk = 8;
+	optional int32 def = 9;
+	optional int32 magicAtk = 10;
+	optional int32 magicDef = 11;
+	optional int32 hit = 12;
+	optional int32 agi = 13;
+	optional int32 crit = 14;
+	optional int32 ten = 15;
+	optional int32 revenge = 16;
+	optional int32 antiRevenge = 17;
+	optional int32 doubleHit = 18;
+	optional int32 antiDoubleHit = 19;
+	optional int32 speed = 20;
+	optional int32 tupoLv = 21;
+}
+
+message CustomPushItemMessage {
+	repeated CustomPushItem activities = 1;	
+	optional uint64 accountId = 2;					
+	optional uint64 roleId = 3;						
+	optional uint32 dbname = 4;						
+	optional uint32 money = 5;						
+	optional uint64 endTime = 6;						
+	optional uint64 beginTime = 7;					
+	optional uint64 validTime = 8;					
+	optional uint64 activityId = 9;					
+	optional uint64 rechargeMoney = 10;					
+}
+
+message CustomPushItem {
+	optional uint32 itemId = 1;
+	optional uint32 itemType = 2;
+	optional uint32 cnt = 3;
+	optional string itemIdStr=4;
+}

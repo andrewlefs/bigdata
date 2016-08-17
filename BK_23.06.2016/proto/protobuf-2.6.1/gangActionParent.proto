@@ -1,0 +1,9 @@
+option java_package = "com.example.tutorial";
+import "gangAction.proto";
+
+// Our address book file is just one of these.
+message gangActionParent {
+  repeated GangActionParam gangactionparam = 1;
+  //repeated GangDonateInfoMessage gangdonateinfo = 2;
+  //repeated PlayerGangDetailInfoMessage playergang = 3;
+}
